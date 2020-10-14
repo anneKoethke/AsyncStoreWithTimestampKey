@@ -1,10 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, TextInput, Button, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TextInput, Button, FlatList, TouchableOpacity, AsyncStorage } from 'react-native';
 import { globalStyles } from './res/style/global';
 import Input from './res/components/input';
 import Btn from './res/components/btn';
 import Card from './res/components/card';
+import moment from "moment";
+// moment.unix(item.key).fromNow()
 
 export default function App() {
 
@@ -43,15 +45,18 @@ export default function App() {
     setDate("");
     setKey("");
     setEntries([ // bs data 
-      { title: "1st entry", content: "Blablabla", mood: "3", date: "2020-10-13", key:"1234567890" },
-      { title: "2nd entry", content: "Blablabla", mood: "3", date: "2020-10-13", key:"1234567891" },
-      { title: "3rd entry", content: "Blablabla", mood: "3", date: "2020-10-13", key:"1234567892" },
-      { title: "4th entry", content: "Blablabla", mood: "3", date: "2020-10-13", key:"1234567893" }
+      { title: "1st entry", content: "Blablabla", mood: "3", date: "2020-10-14", key:"1602664879" },
+      { title: "2nd entry", content: "Blablabla", mood: "3", date: "2020-10-14", key:"1602664907" }
     ]);
   }
 
   // refill all data in App with AsyncStorageData 
   const getDataFromAsyncStore = async () => {
+    /*
+      let now = moment().unix();
+      entry.key = now.toString(); // timestamp as a String like "1601372375"
+      entry.date = moment.unix(now).format("YYYY-MM-DD"); // string like "2020-09-12"
+    */
     try {
       //
       console.log("RECIEVED data from asyncStore")
@@ -62,22 +67,45 @@ export default function App() {
 
   // save single entry to asyncStore (and update view)
   const saveEntryToStore = async () => {
+    let now = moment().unix();
+    setKey(now.toString());
+    setDate(moment.unix(now).format("YYYY-MM-DD"));
+    console.log("key:", key);
+    console.log("date:", date);
+    if (title !== "" && content !== "" && mood !== "") {
+
+    } else {
+      alert("you need to fill in title, content and mood.");
+    }
     console.log('Saved');
   };
 
   // remove single entry from view (and asyncStore)
-  const removeEntryFromView = async () => {
+  const removeEntry = async (key) => {
 
+    console.log("REMOVED item with key =", key)
   };
 
   // get all keys in asyncStore
   const getAllKeysFromAsyncStore = async () => {
-    console.log('get all');
+    let allKeys = []
+    try {
+      allKeys = await AsyncStorage.getAllKeys();
+      console.log("getAllKeysFromeAsyncStore() => allKeys:", allKeys);
+    } catch(e) {
+      alter("GET_ALL_KEYS_ERR: "+e);
+    }
   };
 
   // clear all data in asyncStore 
   const clearAsyncStore = async () => {
-    console.log('remove all');
+    try {
+      await AsyncStorage.clear();
+      setEntries([]);
+    } catch(e) {
+      alert("CLEAR_STORE_ERR: "+e);
+    }
+    console.log("storage was CLEARED");
   };
 
   return (
@@ -100,7 +128,7 @@ export default function App() {
           style={globalStyles.flatlist}
           data={entries}
           renderItem={({item}) => (
-            <TouchableOpacity onPress={() => removeEntryFromView(item.key)}>
+            <TouchableOpacity onPress={() => removeEntry(item.key)}>
               <Card 
                 title={item.title} content={item.content} mood={item.mood} 
                 date={item.date} id={item.key}
