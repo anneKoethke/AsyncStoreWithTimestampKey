@@ -136,7 +136,7 @@ export default function App() {
 
   return (
     <SafeAreaView style={globalStyles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
       
       <Text style={globalStyles.titleText}>AsyncStorge with Timestamps as Keys</Text>
 

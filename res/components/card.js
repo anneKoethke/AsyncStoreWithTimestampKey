@@ -7,7 +7,7 @@ export default function Card ({ title, content, mood, date, id }) {
     <View style={globalStyles.cardView}>
       <Text style={globalStyles.h2}>{title}</Text>
       <Text style={globalStyles.p}>{content}</Text>
-      <Text style={globalStyles.p}>Mood: {mood}</Text>
+      <Text style={globalStyles.p}>mood: {mood}</Text>
       <Text>date: {date} || key: {id}</Text>
     </View>
   );
