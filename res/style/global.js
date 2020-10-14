@@ -26,6 +26,11 @@ export const globalStyles = StyleSheet.create({
   p: {
     color: '#2c3e50',
   },
+  flatlist: {
+    paddingVertical: 10,
+    fontSize: 17,
+    height: 230,
+  },
   innerContainer: {
     marginVertical: 10,
     marginHorizontal: 10,
@@ -61,7 +66,7 @@ export const globalStyles = StyleSheet.create({
     textAlign: 'center',
   },
   cardView: {
-    marginTop: 10,
+    marginBottom: 10,
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#000',
